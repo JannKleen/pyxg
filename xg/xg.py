@@ -279,7 +279,7 @@ def processID(id):
 class Connection:
     """Track information needed to connect to an XGrid controller."""
     
-    def __init__(self, hostname=0, password=0, kerberos=False):
+    def __init__(self, hostname=None, password=None, kerberos=False):
         """Create a Connection object to be passed to other objects.
         
         To connect to a specific Xgrid controller, create a Connection
@@ -323,7 +323,7 @@ class Connection:
         """
         
         # Setup the hostname and password
-        if hostname == 0:
+        if hostname == None:
             if defaultXgridHostname:
                 self.hostname = defaultXgridHostname
             else:
@@ -336,7 +336,7 @@ class Connection:
             self.password = False
         else:
             self.kerberos = False  
-            if password == 0:
+            if password == None:
                 self.password = defaultXgridPassword
             else:
                 self.password = password
@@ -360,7 +360,7 @@ class Connection:
 class JobManager:
     """Manage a set of Xgrid jobs."""
     
-    def __init__(self, gridID=u'0', connection=None, update=0):
+    def __init__(self, gridID=u'0', connection=None, update=False):
         """Create a JobManager for a given Grid and Connection.
         
         This class is mainly designed to be a base class of the Conroller
@@ -438,7 +438,7 @@ class JobManager:
             self._updateJobs()
         return self._jobs
 
-    def job(self, jobID=u'999999999', update=1):
+    def job(self, jobID=u'999999999', update=True):
         """Returns the Job object with job identifier id.
 
         @arg jobID: The job identifier.  Can be given as unicode, str or int.
@@ -540,7 +540,7 @@ class JobManager:
 class GridManager:
     """Manage the grids of a given Xgrid controller."""
     
-    def __init__(self, connection=None, update=0):
+    def __init__(self, connection=None, update=False):
         """A class to manage a set of Xgrid grids.
         
         This class is meant to be a base class for the Controller class.
@@ -631,7 +631,7 @@ class GridManager:
 class Controller(JobManager, GridManager):
     """A class for working with an Xgrid controller."""
     
-    def __init__(self, connection=None, update=0):
+    def __init__(self, connection=None, update=False):
         """This class provides an interface to an Xgrid controller.
         
         An Xgrid controller is a single machine that manages a set of
@@ -764,7 +764,7 @@ class Controller(JobManager, GridManager):
 class Grid(JobManager):
     """A class for working with jobs on a specific Xgrid grid."""
     
-    def __init__(self, gridID=u'0', connection=None, update=0):
+    def __init__(self, gridID=u'0', connection=None, update=False):
         """This class provides an interface to an Xgrid grid.
         
         An Xgrid grid is a collection of agents and jobs running on the
@@ -957,7 +957,7 @@ class Job:
                          
     # Get methods
                                                       
-    def specification(self, update=1):
+    def specification(self, update=True):
         """Return the Xgrid job specification.
         
         The Xgrid job specification is the dictionary that Xgrid uses
@@ -969,7 +969,7 @@ class Job:
             self._updateSpecification()
         return self._specification
         
-    def info(self, update=1):
+    def info(self, update=True):
         """Return the current status information about a job.
         
         The job info is a dictionary of keys describing the current state
@@ -990,7 +990,7 @@ class Job:
         
     # Job submission and results
 
-    def results(self, stdout='', outdir='', stderr='', block=10,silent=False):
+    def results(self, stdout='', outdir='', stderr='', block=10, silent=False):
         """Retrive the results of an Xgrid job.
         
         This method provides both a blocking and nonblocking method of 
